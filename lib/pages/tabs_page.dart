@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:getx_app/controller/bottom_navigation_controller.dart';
 
 class TabsPage extends StatelessWidget {
   const TabsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: _Pages(),
-      bottomNavigationBar: _Navigation(),
+    return Scaffold(
+      body: const _Pages(),
+      bottomNavigationBar: Obx(() => const _Navigation()),
     );
   }
 }
@@ -19,16 +21,24 @@ class _Navigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(currentIndex: 0, items: const [
-      BottomNavigationBarItem(
-        label: 'For you',
-        icon: Icon(Icons.person_outline),
-      ),
-      BottomNavigationBarItem(
-        label: 'Headings',
-        icon: Icon(Icons.public),
-      ),
-    ]);
+    BottomNavigationController bottomNavigationController =
+        Get.put(BottomNavigationController());
+    return Obx((() => BottomNavigationBar(
+            type: BottomNavigationBarType.shifting,
+            onTap: (currentIndex) {
+              bottomNavigationController.changeIndex(currentIndex);
+            },
+            currentIndex: bottomNavigationController.selectedIndex.value,
+            items: const [
+              BottomNavigationBarItem(
+                label: 'For you',
+                icon: Icon(Icons.person_outline),
+              ),
+              BottomNavigationBarItem(
+                label: 'Headings',
+                icon: Icon(Icons.public),
+              ),
+            ])));
   }
 }
 
